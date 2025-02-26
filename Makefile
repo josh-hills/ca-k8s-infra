@@ -1,5 +1,7 @@
 .PHONY: entrypoint install train deploy start_port_forward stop_port_forward
 
+ENVIRONMENT ?= dev-
+
 entrypoint: deploy train
 
 make refresh:
@@ -16,7 +18,7 @@ deploy:
 
 start_port_forward:
 	@echo "Starting port forwarding..."
-	@kubectl port-forward service/raycluster-head-svc 8265:8265 10001:10001 & echo $$! >> .port_forward.pid
+	@kubectl port-forward service/${ENVIRONMENT}-raycluster-head-svc 8265:8265 10001:10001 & echo $$! >> .port_forward.pid
 
 stop_port_forward:
 	@echo "Stopping port forwarding..."
