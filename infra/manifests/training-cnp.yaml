@@ -8,16 +8,16 @@ spec:
       ray.io/node-type: worker
 
   ingress:
-    # Allow all traffic from the same namespace
+    # Allow all traffic within the cluster
     - fromEndpoints:
         - matchLabels:
-            k8s:io.kubernetes.pod.namespace: training
+            ray.io/cluster: raycluster
 
   egress:
-    # Allow all traffic within the same namespace
+    # Allow all traffic within the cluster
     - toEndpoints:
         - matchLabels:
-            k8s:io.kubernetes.pod.namespace: training
+            ray.io/cluster: raycluster
 
     # Allow traffic to minio-internal
     - toEndpoints:
