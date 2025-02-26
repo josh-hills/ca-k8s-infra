@@ -72,7 +72,7 @@ def train_func(config):
     fs = S3FileSystem(
         access_key="minioadmin",
         secret_key="minioadmin",  # noqa
-        endpoint_override="minio.minio-internal.svc.cluster.local:9000",
+        endpoint_override=f"minio.minio-internal-{os.environ['ENVIRONMENT']}.svc.cluster.local:9000",
         scheme="http",
     )
 
