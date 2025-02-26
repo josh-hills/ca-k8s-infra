@@ -32,7 +32,7 @@ spec:
     # Allow DNS queries
     - toEndpoints:
         - matchLabels:
-            k8s:io.kubernetes.pod.namespace: kube-system-{{ .Values.environment }}
+            k8s:io.kubernetes.pod.namespace: kube-system
             k8s-app: kube-dns
       toPorts:
         - ports:
