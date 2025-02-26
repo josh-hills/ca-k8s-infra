@@ -11,7 +11,13 @@ spec:
     rayStartParams:
       dashboard-host: '0.0.0.0'
       block: 'true'
+      metrics-export-port: '8080'
     template:
+      metadata:
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8265"
+          prometheus.io/path: "/api/serve/metrics"
       spec:
         containers:
           - name: ray-head
@@ -25,6 +31,8 @@ spec:
                 name: dashboard
               - containerPort: 10001
                 name: client
+              - containerPort: 8080
+                name: metrics
             resources:
               limits:
                 cpu: "4"
