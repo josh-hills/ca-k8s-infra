@@ -2,7 +2,6 @@ apiVersion: ray.io/v1
 kind: RayCluster
 metadata:
   name: raycluster
-  namespace: training
 spec:
   rayVersion: '2.42.1'
   enableInTreeAutoscaling: false
