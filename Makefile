@@ -4,12 +4,12 @@ entrypoint: deploy train
 
 make refresh:
 	@echo "Refreshing resources..."
-	@helm uninstall raycluster
-	@helm upgrade --install training-infra  ./training-infra 
+	@helm uninstall training-infra 
+	@helm upgrade --install training-infra ./training-infra 
 
 deploy:
 	@echo "Deploying resources..."
-	@helm upgrade --install raycluster ./infra/helm/raycluster
+	@helm upgrade --install training-infra  ./training-infra
 	@echo "Waiting for jobs to complete..."
 	@kubectl get jobs -o name | xargs -I {} bash -c 'kubectl wait --for=condition=complete {} --timeout=300s || kubectl wait --for=condition=failed {} --timeout=300s'
 
