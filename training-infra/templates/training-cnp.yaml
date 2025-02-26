@@ -11,13 +11,13 @@ spec:
     # Allow all traffic within the cluster
     - fromEndpoints:
         - matchLabels:
-            ray.io/cluster: raycluster
+            ray.io/cluster: {{ .Release.Namespace }}-{{ .Values.rayclusterName }}
 
   egress:
     # Allow all traffic within the cluster
     - toEndpoints:
         - matchLabels:
-            ray.io/cluster: raycluster
+            ray.io/cluster: {{ .Release.Namespace }}-{{ .Values.rayclusterName }}
 
     # Allow traffic to minio-internal
     - toEndpoints:
