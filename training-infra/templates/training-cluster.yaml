@@ -1,7 +1,7 @@
 apiVersion: ray.io/v1
 kind: RayCluster
 metadata:
-  name: {{ .Release.Namespace }}-{{ .Values.rayclusterName }}
+  name: {{ .Release.Namespace }}-{{ .Values.rayClusterName }}
 spec:
   rayVersion: '2.42.1'
   enableInTreeAutoscaling: false

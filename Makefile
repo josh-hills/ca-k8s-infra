@@ -5,7 +5,7 @@ entrypoint: deploy train
 make refresh:
 	@echo "Refreshing resources..."
 	@helm uninstall raycluster
-	@helm upgrade --install raycluster ./infra/helm/raycluster 
+	@helm upgrade --install training-infra  ./training-infra 
 
 deploy:
 	@echo "Deploying resources..."
