@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aim-runs2
+  namespace: training
+spec:
+  capacity:
+    storage: 1Gi # or whatever size disk you provisioned
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /aim
+    server: 10.244.3.64  # add your own IP here
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aim-runs-claim2
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: aim-runs2
+  resources:
+    requests:
+      storage: 1Gi

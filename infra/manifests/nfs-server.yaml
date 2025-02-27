@@ -1,0 +1,46 @@
+# nfs-server.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-server
+  namespace: training
+spec:
+  selector:
+    matchLabels:
+      app: nfs-server
+  template:
+    metadata:
+      labels:
+        app: nfs-server
+    spec:
+      containers:
+      - name: nfs-server
+        image: docker.io/adnanhodzic/nfs-server-k8s
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: data
+          mountPath: /exports
+      volumes:
+      - name: data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs-server
+  namespace: training
+spec:
+  clusterIP: "10.96.108.53"  # Use the currently assigned IP
+  ports:
+  - name: nfs
+    port: 2049
+    protocol: TCP
+  - name: mountd
+    port: 20048
+    protocol: TCP
+  - name: rpcbind
+    port: 111
+    protocol: TCP
+  selector:
+    app: nfs-server

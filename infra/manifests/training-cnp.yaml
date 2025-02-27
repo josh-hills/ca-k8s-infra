@@ -41,3 +41,10 @@ spec:
               protocol: UDP
             - port: "53"
               protocol: TCP
+              
+    # Allow traffic to NFS service
+    - toServices:
+        - k8sService:
+            serviceName: nfs-server
+            namespace: training
+
