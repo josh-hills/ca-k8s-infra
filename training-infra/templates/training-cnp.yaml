@@ -1,11 +1,11 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: ray-worker-network-policy
+  name: ray-cluster-network-policy
 spec:
   endpointSelector:
     matchLabels:
-      ray.io/node-type: worker
+      ray.io/cluster: {{ .Values.rayClusterName }}-{{ .Values.environment }}
 
   ingress:
     # Allow all traffic within the cluster
