@@ -1,33 +1,20 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: pythia-70m-model-sync-external
+  name: pythia-70m-model-sync
 spec:
   template:
     spec:
       containers:
       - name: model-sync
-        image: ubuntu:20.04
+        image: localhost:5001/jobs
+        imagePullPolicy: Always
         command:
         - /bin/bash
         - -c
         - |
-          # Install required packages
-          apt-get update && apt-get install -y \
-            python3-pip \
-            wget \
-            curl
-
-          # Install Hugging Face CLI
-          pip3 install huggingface_hub
-
-          # Install MinIO client
-          wget https://dl.min.io/client/mc/release/linux-amd64/mc
-          chmod +x mc
-          mv mc /usr/local/bin/
-
           # Configure MinIO client
-          mc alias set myminio http://minio.minio-external.svc.cluster.local:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+          mc alias set myminio http://minio.minio-internal-{{ .Values.environment }}.svc.cluster.local:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 
           # Create bucket if it doesn't exist
           mc mb myminio/models --ignore-existing
@@ -48,5 +35,7 @@ spec:
           value: "minioadmin"
         - name: MINIO_SECRET_KEY
           value: "minioadmin"
+        - name: ENVIRONMENT
+          value: {{ .Values.environment }}
       restartPolicy: Never
   backoffLimit: 4
