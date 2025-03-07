@@ -7,6 +7,8 @@ spec:
   enableInTreeAutoscaling: false
   headGroupSpec:
     serviceType: ClusterIP
+    serviceAnnotations:
+      aws-credentials: "AKIAT4GVSAXXDBBY3WYS:6cxbhBoFR4DhXB4q68xOTRpIKPYEXYCLgl7+c63a"
     rayStartParams:
       dashboard-host: '0.0.0.0'
       block: 'true'
