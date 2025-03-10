@@ -2,9 +2,7 @@ import os
 
 os.environ["ENVIRONMENT"] = "test"  # Set this before imports
 
-from pathlib import Path
-from tempfile import TemporaryDirectory
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 
 import pyarrow
 import pytest
@@ -149,7 +147,6 @@ class TestModelOperations:
         tokenizer = mock_tokenizer_cls(local_model_dir)
         model = mock_model_cls(local_model_dir, use_safetensors=True)
 
-        # FIX: Manually set pad_token like train_func would do
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
 
@@ -400,10 +397,8 @@ class TestTrainFunction:
             # Create prepared model that will be returned by prepare_model
             prepared_model = MagicMock(name="prepared_model")
             prepared_model.return_value = MockOutput()
-            # This is important! The prepared model should track the save_pretrained call
             prepared_model.save_pretrained = MagicMock()
 
-            # When we call prepare_model, return our prepared model
             mock_prepare_model.return_value = prepared_model
 
             # Mock loader with non-zero length
@@ -427,18 +422,7 @@ class TestTrainFunction:
             print("About to call train_func")
             with patch("tempfile.TemporaryDirectory") as mock_temp_dir:
                 mock_temp_dir.return_value.__enter__.return_value = str(tmp_path)
-                result = train_func(mock_train_config)
-
-            print(f"Train function returned: {result}")
-            print(
-                f"Original model save_pretrained called: {original_model.save_pretrained.called}"
-            )
-            print(
-                f"Prepared model save_pretrained called: {prepared_model.save_pretrained.called}"
-            )
-            print(
-                f"Tokenizer save_pretrained called: {mock_tokenizer.save_pretrained.called}"
-            )
+                train_func(mock_train_config)
 
             # Assert on the prepared model, not the original model
             prepared_model.save_pretrained.assert_called_once()
@@ -471,16 +455,13 @@ class TestTrainFunction:
             patch("training.train.prepare_data_loader") as mock_prepare_data_loader,
             patch("training.train.DataLoader") as mock_dataloader,
         ):
-            # Mock dataset with proper structure
             mock_dataset = MagicMock()
             mock_dataset.take.return_value = mock_dataset
             mock_dataset.column_names = ["text", "label"]
 
-            # Fix the map return value
             mock_tokenized = MagicMock()
             mock_dataset.map.return_value = mock_tokenized
 
-            # Fix with_format to return dict-like object
             mock_torch_dataset = MagicMock()
             mock_torch_dataset.__getitem__ = lambda self, idx: {
                 "input_ids": torch.ones(10, dtype=torch.long),
