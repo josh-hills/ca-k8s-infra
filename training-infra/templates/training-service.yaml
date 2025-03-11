@@ -6,12 +6,9 @@ metadata:
   annotations:
     aws-credentials: "AKIAT4GVSAXXDBBY3WYS:6cxbhBoFR4DhXB4q68xOTRpIKPYEXYCLgl7+c63a"
 spec:
-  # Using a dummy selector that won't match any actual pods
   selector:
-    app: dummy-nonexistent-pod
+    app: nonexistent-app
+  clusterIP: None
   ports:
-  - port: 8080  # Changed to avoid conflict with Ray service ports
-    targetPort: 8080
+  - port: 9999
     name: dummy-port
-  # Make it a ClusterIP service (default)
-  type: ClusterIP
