@@ -1,9 +1,7 @@
 apiVersion: ray.io/v1
 kind: RayCluster
 metadata:
-  name: {{ .Values.rayClusterName }}-{{ .Values.environment }}
-  annotations:  
-    aws-credentials: "AKIAT4GVSAXXDBBY3WYS:6cxbhBoFR4DhXB4q68xOTRpIKPYEXYCLgl7+c63a"
+  name: {{ .Values.rayClusterName }}-{{ .Values.environment }} 
 spec:
   rayVersion: '2.42.1'
   enableInTreeAutoscaling: false
