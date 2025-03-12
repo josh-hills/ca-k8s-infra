@@ -15,7 +15,7 @@ spec:
         containers:
           - name: ray-head
             # preloaded onto nodes
-            image: localhost:5001/training
+            image: localhost:5001/training:{{ .Values.environment }}
             imagePullPolicy: Always
             env:
               - name: AWS_ACCESS_KEY_ID
@@ -54,7 +54,7 @@ spec:
           containers:
             - name: ray-worker
               # preloaded onto nodes
-              image: localhost:5001/training
+              image: localhost:5001/training:{{ .Values.environment }}
               imagePullPolicy: Always
               lifecycle:
                 preStop:
