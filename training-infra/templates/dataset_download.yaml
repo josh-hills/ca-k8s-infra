@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: dataset-sync
-        image: localhost:5001/jobs
+        image: localhost:5001/job
         imagePullPolicy: Always
         command:
         - /bin/bash
