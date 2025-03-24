@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: pythia-70m-model-sync
+  name: model-sync
 spec:
   template:
     spec:
