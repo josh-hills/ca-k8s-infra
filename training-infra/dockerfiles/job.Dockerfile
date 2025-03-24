@@ -1,4 +1,5 @@
 FROM ubuntu:20.04
+ARG TARGETPLATFORM
 
 # Install required packages in a single layer
 RUN apt-get update && apt-get install -y \
@@ -10,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install MinIO client
-RUN  wget https://dl.min.io/client/mc/release/linux-amd64/mc \
+RUN  ARCH=$(echo $TARGETPLATFORM | cut -d / -f 2) && \
+    wget https://dl.min.io/client/mc/release/linux-${ARCH}/mc \
     && chmod +x mc \
     && mv mc /usr/local/bin/
 
