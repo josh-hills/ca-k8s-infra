@@ -1,5 +1,6 @@
 import os
 import tempfile
+import argparse
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -36,6 +37,20 @@ train_config = {
     "max_iterations": 10,
 }
 
+# Parse command-line arguments
+def parse_args():
+    parser = argparse.ArgumentParser(description="Training script for sentiment model")
+    parser.add_argument("--model_location", type=str, default=train_config["model_location"],
+                        help="Model location path in MinIO under the models bucket")
+    parser.add_argument("--batch_size", type=int, default=train_config["batch_size"],
+                        help="Batch size for training")
+    parser.add_argument("--learning_rate", type=float, default=train_config["learning_rate"],
+                        help="Learning rate for optimizer")
+    parser.add_argument("--num_epochs", type=int, default=train_config["num_epochs"],
+                        help="Number of training epochs")
+    parser.add_argument("--max_iterations", type=int, default=train_config["max_iterations"],
+                        help="Maximum number of iterations for training")
+    return parser.parse_args()
 
 # For copying from S3 to local:
 def copy_dir_from_s3(fs, source_path, target_path):
@@ -186,7 +201,7 @@ def train_func(config):
 
                 # Report metrics to Ray
                 ray.train.report({"training_loss": loss.item(), "epoch": epoch})
-
+                
             # Evaluate on test set
             model.eval()
             test_loss = 0.0
@@ -218,6 +233,21 @@ def train_func(config):
 
 
 if __name__ == "__main__":
+    args = parse_args()
+    
+    train_config["model_location"] = args.model_location
+    train_config["batch_size"] = args.batch_size
+    train_config["learning_rate"] = args.learning_rate
+    train_config["num_epochs"] = args.num_epochs
+    train_config["max_iterations"] = args.max_iterations
+    
+    print(f"Training configuration:")
+    print(f"  Model location: {train_config['model_location']}")
+    print(f"  Batch size: {train_config['batch_size']}")
+    print(f"  Learning rate: {train_config['learning_rate']}")
+    print(f"  Number of epochs: {train_config['num_epochs']}")
+    print(f"  Max iterations: {train_config['max_iterations']}")
+    
     # Run `make ray_port_forward` ahead of this to make the ray cluster accessible
     ray.init(address="ray://localhost:10001", runtime_env=runtime_env)
 
