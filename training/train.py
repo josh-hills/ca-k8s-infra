@@ -1,3 +1,4 @@
+import argparse
 import os
 import tempfile
 from pathlib import Path
@@ -35,6 +36,30 @@ train_config = {
     "num_epochs": 1,
     "max_iterations": 10,
 }
+
+
+# Parse command-line arguments
+def parse_args():
+    parser = argparse.ArgumentParser(description="Training script for sentiment model")
+    parser.add_argument(
+        "--model_location",
+        type=str,
+        default=train_config["model_location"],
+        help="Model location path in MinIO under the models bucket",
+    )
+    parser.add_argument(
+        "--num_epochs",
+        type=int,
+        default=train_config["num_epochs"],
+        help="Number of training epochs",
+    )
+    parser.add_argument(
+        "--max_iterations",
+        type=int,
+        default=train_config["max_iterations"],
+        help="Maximum number of iterations for training",
+    )
+    return parser.parse_args()
 
 
 # For copying from S3 to local:
@@ -218,6 +243,17 @@ def train_func(config):
 
 
 if __name__ == "__main__":
+    args = parse_args()
+
+    train_config["model_location"] = args.model_location
+    train_config["num_epochs"] = args.num_epochs
+    train_config["max_iterations"] = args.max_iterations
+
+    print("Training configuration:")
+    print(f"  Model location: {train_config['model_location']}")
+    print(f"  Number of epochs: {train_config['num_epochs']}")
+    print(f"  Max iterations: {train_config['max_iterations']}")
+
     # Run `make ray_port_forward` ahead of this to make the ray cluster accessible
     ray.init(address="ray://localhost:10001", runtime_env=runtime_env)
 
